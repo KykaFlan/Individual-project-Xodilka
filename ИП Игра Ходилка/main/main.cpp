@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <cstdlib>
 #include <conio.h>
 #include <windows.h>
@@ -43,17 +43,13 @@ int main()
     _getch();
     system("cls");
 
-
-
-
     // ЗАПУСКАЕМ ИГРУ
     StartGame();
 
     cout << "\n\n\nНажмите любую клавишу для завершения...";
     _getch();
     system("cls");
-
-    
+        
     // Получаем победителя и передаем в EndGame
     int winner = GetWinner();
     EndGame(winner);
