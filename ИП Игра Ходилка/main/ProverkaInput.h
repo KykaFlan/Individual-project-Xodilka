@@ -1,7 +1,5 @@
 #pragma once
 
-int CheckKolichestvoPlayers(int KolichestvoPlayers); //проверка ввода количества участников
+int CheckKolichestvoPlayers(int KolichestvoPlayers); 
 
-
-//GamePlay
-int GetNumberInput(int minValue, int maxValue);
+int GetNumberInput(int MinNumber, int MaxNumber);
