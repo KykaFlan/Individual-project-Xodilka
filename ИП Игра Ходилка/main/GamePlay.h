@@ -1,10 +1,10 @@
 #pragma once
 
-// Глобальные переменные
+// Р“Р»РѕР±Р°Р»СЊРЅС‹Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ
 extern int KolichestvoPlayers;
 extern int winnerPlayer;
 
 
-// Функции игры (не все, только те которые выхываются вне GamePlay.cpp)
+// Р¤СѓРЅРєС†РёРё РёРіСЂС‹ (РЅРµ РІСЃРµ, С‚РѕР»СЊРєРѕ С‚Рµ РєРѕС‚РѕСЂС‹Рµ РІС‹С…С‹РІР°СЋС‚СЃСЏ РІРЅРµ GamePlay.cpp)
 void StartGame();
 int GetWinner();
