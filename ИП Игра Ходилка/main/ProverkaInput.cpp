@@ -13,10 +13,10 @@ int CheckKolichestvoPlayers(int KolichestvoPlayers) {
             cin.ignore(1000, '\n');
         }
         else if (2 > KolichestvoPlayers || KolichestvoPlayers > 5) {
-            cout << "Êîëè÷åñòâî èãğîêîâ íå íàõîäèòñÿ â äèàïîçîíå îò 2 äî 5 âêëş÷èòåëüíî.\n";
-            cout << "Ïîæàëóéñòâà ïîâòîğèòå ââîä. ";
-            cout << "Ñêîëüêî èãğîêîâ áóäåò ó÷àñòâàòü â èãğå?\n";
-            cout << "Êîëè÷åñòâî: ";
+            cout << "ĞšĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ Ğ¸Ğ³Ñ€Ğ¾ĞºĞ¾Ğ² Ğ½Ğµ Ğ½Ğ°Ñ…Ğ¾Ğ´Ğ¸Ñ‚ÑÑ Ğ² Ğ´Ğ¸Ğ°Ğ¿Ğ¾Ğ·Ğ¾Ğ½Ğµ Ğ¾Ñ‚ 2 Ğ´Ğ¾ 5 Ğ²ĞºĞ»ÑÑ‡Ğ¸Ñ‚ĞµĞ»ÑŒĞ½Ğ¾.\n";
+            cout << "ĞŸĞ¾Ğ¶Ğ°Ğ»ÑƒĞ¹ÑÑ‚Ğ²Ğ° Ğ¿Ğ¾Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ñ‚Ğµ Ğ²Ğ²Ğ¾Ğ´. ";
+            cout << "Ğ¡ĞºĞ¾Ğ»ÑŒĞºĞ¾ Ğ¸Ğ³Ñ€Ğ¾ĞºĞ¾Ğ² Ğ±ÑƒĞ´ĞµÑ‚ ÑƒÑ‡Ğ°ÑÑ‚Ğ²Ğ°Ñ‚ÑŒ Ğ² Ğ¸Ğ³Ñ€Ğµ?\n";
+            cout << "ĞšĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾: ";
             cin >> KolichestvoPlayers;
             system("cls");
         }
@@ -28,19 +28,19 @@ int CheckKolichestvoPlayers(int KolichestvoPlayers) {
 }
 
 
-int GetNumberInput(int MinNunber, int MaxNunber) {
+int GetNumberInput(int MinNumber, int MaxNumber) {
     int input;
     while (true) {
-        cout << "Ââåäèòå ÷èñëî îò " << MinNunber << " äî " << MaxNunber << ": ";
+        cout << "Ğ’Ğ²ĞµĞ´Ğ¸Ñ‚Ğµ Ñ‡Ğ¸ÑĞ»Ğ¾ Ğ¾Ñ‚ " << MinNumber << " Ğ´Ğ¾ " << MaxNumber << ": ";
         cin >> input;
 
         if (cin.fail()) {
             cin.clear();
             cin.ignore(1000, '\n');
-            cout << "Îøèáêà! Ââåäèòå ÷èñëî.\n";
+            cout << "ĞÑˆĞ¸Ğ±ĞºĞ°! Ğ’Ğ²ĞµĞ´Ğ¸Ñ‚Ğµ Ñ‡Ğ¸ÑĞ»Ğ¾.\n";
         }
-        else if (input < MinNunber || input > MaxNunber) {
-            cout << "×èñëî äîëæíî áûòü îò " << MinNunber << " äî " << MaxNunber << "!\n";
+        else if (input < MinNumber || input > MaxNumber) {
+            cout << "Ğ§Ğ¸ÑĞ»Ğ¾ Ğ´Ğ¾Ğ»Ğ¶Ğ½Ğ¾ Ğ±Ñ‹Ñ‚ÑŒ Ğ¾Ñ‚ " << MinNumber << " Ğ´Ğ¾ " << MaxNumber << "!\n";
         }
         else {
             cin.ignore(1000, '\n');
