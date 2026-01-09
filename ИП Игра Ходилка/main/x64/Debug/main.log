@@ -1,0 +1,3 @@
+﻿  GamePlay.cpp
+C:\Users\dille\Desktop\ProverkaGames-main\ProverkaGames-main\Xodilka Тест Готового\main\GamePlay.cpp(64,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  main.vcxproj -> C:\Users\dille\Desktop\ProverkaGames-main\ProverkaGames-main\Xodilka Тест Готового\x64\Debug\main.exe
