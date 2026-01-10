@@ -1,0 +1,10 @@
+﻿  GamePlay.cpp
+C:\Users\dille\Desktop\ProverkaGames-main\ProverkaGames-main\Xodilka Тест Готового\main\GamePlay.cpp(73,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  main.cpp
+  OutConsol.cpp
+  ProverkaInput.cpp
+  Создание кода
+  Previous IPDB not found, fall back to full compilation.
+  All 165 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Создание кода завершено
+  main.vcxproj -> C:\Users\dille\Desktop\ProverkaGames-main\ProverkaGames-main\Xodilka Тест Готового\x64\Release\main.exe
