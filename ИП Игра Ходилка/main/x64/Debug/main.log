@@ -1,7 +1,0 @@
-﻿  GamePlay.cpp
-C:\Users\dille\Desktop\ИП Игра Ходилка\main\GamePlay.cpp(64,15): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
-  main.cpp
-  OutConsol.cpp
-  ProverkaInput.cpp
-  Создание кода...
-  main.vcxproj -> C:\Users\dille\Desktop\ИП Игра Ходилка\x64\Debug\main.exe
