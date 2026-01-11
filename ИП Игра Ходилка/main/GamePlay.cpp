@@ -1,34 +1,34 @@
-#include <iostream>      // для cout и cin
-#include <conio.h>       // для _getch()
-#include <cstdlib>       // для rand(), srand(), system() | Для рандомайзера
-#include <ctime>         // для time()                    | Для рандомайзера
-#include <windows.h>     // для работы с консолью Windows
-#include <vector>        // для vector
-#include <algorithm>     // для sort()
+#include <iostream>      // Г¤Г«Гї cout ГЁ cin
+#include <conio.h>       // Г¤Г«Гї _getch()
+#include <cstdlib>       // Г¤Г«Гї rand(), srand(), system() | Г„Г«Гї Г°Г Г­Г¤Г®Г¬Г Г©Г§ГҐГ°Г 
+#include <ctime>         // Г¤Г«Гї time()                    | Г„Г«Гї Г°Г Г­Г¤Г®Г¬Г Г©Г§ГҐГ°Г 
+#include <windows.h>     // Г¤Г«Гї Г°Г ГЎГ®ГІГ» Г± ГЄГ®Г­Г±Г®Г«ГјГѕ Windows
+#include <vector>        // Г¤Г«Гї vector
+#include <algorithm>     // Г¤Г«Гї sort()
  
 #include "GamePlay.h"
 #include "ProverkaInput.h"
 
 using namespace std;
 
-// Глобальные переменные
-int KolichestvoPlayers = 2;                             // Количество игроков
-int playerPositions[5] = { 0, 0, 0, 0, 0 };             // Позиции всех игроков на поле
-int skipTurns[5] = { 0, 0, 0, 0, 0 };                   // Счетчики пропущенных ходов         
-bool frozen[5] = { false, false, false, false, false }; // Флаги "заморозки" игроков
-int currentPlayer = 0;                                  // Номер текущего игрока, который ходит
-bool gameOver = false;                                  // Флаг завершения игры 
-char gameMap[50];                                       // Игровое поле из 50 клеток
-int winnerPlayer = 0;                                   // Номер победившего игрока
+// ГѓГ«Г®ГЎГ Г«ГјГ­Г»ГҐ ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ
+int KolichestvoPlayers = 2;                             // ГЉГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГЁГЈГ°Г®ГЄГ®Гў
+int playerPositions[5] = { 0, 0, 0, 0, 0 };             // ГЏГ®Г§ГЁГ¶ГЁГЁ ГўГ±ГҐГµ ГЁГЈГ°Г®ГЄГ®Гў Г­Г  ГЇГ®Г«ГҐ
+int skipTurns[5] = { 0, 0, 0, 0, 0 };                   // Г‘Г·ГҐГІГ·ГЁГЄГЁ ГЇГ°Г®ГЇГіГ№ГҐГ­Г­Г»Гµ ГµГ®Г¤Г®Гў         
+bool frozen[5] = { false, false, false, false, false }; // Г”Г«Г ГЈГЁ "Г§Г Г¬Г®Г°Г®Г§ГЄГЁ" ГЁГЈГ°Г®ГЄГ®Гў
+int currentPlayer = 0;                                  // ГЌГ®Г¬ГҐГ° ГІГҐГЄГіГ№ГҐГЈГ® ГЁГЈГ°Г®ГЄГ , ГЄГ®ГІГ®Г°Г»Г© ГµГ®Г¤ГЁГІ
+bool gameOver = false;                                  // Г”Г«Г ГЈ Г§Г ГўГҐГ°ГёГҐГ­ГЁГї ГЁГЈГ°Г» 
+char gameMap[50];                                       // Г€ГЈГ°Г®ГўГ®ГҐ ГЇГ®Г«ГҐ ГЁГ§ 50 ГЄГ«ГҐГІГ®ГЄ
+int winnerPlayer = 0;                                   // ГЌГ®Г¬ГҐГ° ГЇГ®ГЎГҐГ¤ГЁГўГёГҐГЈГ® ГЁГЈГ°Г®ГЄГ 
 
-// Рисует разрез
+// ГђГЁГ±ГіГҐГІ Г°Г Г§Г°ГҐГ§
 void DrowRazrez() {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
     cout << "=================================================\n";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
-// Перекрашивает буквы для карты и выводит их
+// ГЏГҐГ°ГҐГЄГ°Г ГёГЁГўГ ГҐГІ ГЎГіГЄГўГ» Г¤Г«Гї ГЄГ Г°ГІГ» ГЁ ГўГ»ГўГ®Г¤ГЁГІ ГЁГµ
 void ColorBukva(char bukva) {
     if (bukva == 'J') SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
     else if (bukva == 'B') SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
@@ -40,23 +40,23 @@ void ColorBukva(char bukva) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
-// Параметры карты и запуск рандомайзера
+// ГЏГ Г°Г Г¬ГҐГІГ°Г» ГЄГ Г°ГІГ» ГЁ Г§Г ГЇГіГ±ГЄ Г°Г Г­Г¤Г®Г¬Г Г©Г§ГҐГ°Г 
 void InitGame() {
     for (int i = 0; i < 50; i++) {
         gameMap[i] = '.';
     }
-    //Клетки старта и финиша
+    //ГЉГ«ГҐГІГЄГЁ Г±ГІГ Г°ГІГ  ГЁ ГґГЁГ­ГЁГёГ 
     gameMap[0] = 'S';
     gameMap[49] = 'F';
 
-    //Клетки ловушки
+    //ГЉГ«ГҐГІГЄГЁ Г«Г®ГўГіГёГЄГЁ
     gameMap[3] = 'J';
     gameMap[23] = 'J';
     gameMap[35] = 'J';
     gameMap[40] = 'J';
     gameMap[48] = 'J';
 
-    //Клетки бонусы
+    //ГЉГ«ГҐГІГЄГЁ ГЎГ®Г­ГіГ±Г»
     gameMap[6] = 'B';
     gameMap[14] = 'B';
     gameMap[19] = 'B';
@@ -65,77 +65,77 @@ void InitGame() {
     gameMap[39] = 'B';
     gameMap[45] = 'B';
 
-    //Клетки порталы
+    //ГЉГ«ГҐГІГЄГЁ ГЇГ®Г°ГІГ Г«Г»
     gameMap[22] = 'P';
     gameMap[37] = 'P';
 
-    // Для рандомайзера
+    // Г„Г«Гї Г°Г Г­Г¤Г®Г¬Г Г©Г§ГҐГ°Г 
     srand(time(0));
 }
 
-// Возвращает вектор с клетками, либо она пустая и тогда длинна 0, либо номерами игроков, которые стоят на заданной клетке. 
+// Г‚Г®Г§ГўГ°Г Г№Г ГҐГІ ГўГҐГЄГІГ®Г° Г± ГЄГ«ГҐГІГЄГ Г¬ГЁ, Г«ГЁГЎГ® Г®Г­Г  ГЇГіГ±ГІГ Гї ГЁ ГІГ®ГЈГ¤Г  Г¤Г«ГЁГ­Г­Г  0, Г«ГЁГЎГ® Г­Г®Г¬ГҐГ°Г Г¬ГЁ ГЁГЈГ°Г®ГЄГ®Гў, ГЄГ®ГІГ®Г°Г»ГҐ Г±ГІГ®ГїГІ Г­Г  Г§Г Г¤Г Г­Г­Г®Г© ГЄГ«ГҐГІГЄГҐ. 
 vector<int> GetPlayersOnCell(int ProverkKletka) {
-    vector<int> players; // Создаем пустой вектор для хранения номеров игроков
+    vector<int> players; // Г‘Г®Г§Г¤Г ГҐГ¬ ГЇГіГ±ГІГ®Г© ГўГҐГЄГІГ®Г° Г¤Г«Гї ГµГ°Г Г­ГҐГ­ГЁГї Г­Г®Г¬ГҐГ°Г®Гў ГЁГЈГ°Г®ГЄГ®Гў
     for (int i = 0; i < KolichestvoPlayers; i++) {
         if (playerPositions[i] == ProverkKletka) {
             players.push_back(i + 1);
         }
     }
-    return players; //Возвращает вектор с номерами игроков
+    return players; //Г‚Г®Г§ГўГ°Г Г№Г ГҐГІ ГўГҐГЄГІГ®Г° Г± Г­Г®Г¬ГҐГ°Г Г¬ГЁ ГЁГЈГ°Г®ГЄГ®Гў
 }
 
-// Возвращатает значение 
+// Г‚Г®Г§ГўГ°Г Г№Г ГІГ ГҐГІ Г§Г­Г Г·ГҐГ­ГЁГҐ 
 int FindTeleportDestination(int pos) {
     if (pos == 22) return 37;
     if (pos == 37) return 22;
     return pos;
 }
 
-// Выбор какого игрока заморозить
+// Г‚Г»ГЎГ®Г° ГЄГ ГЄГ®ГЈГ® ГЁГЈГ°Г®ГЄГ  Г§Г Г¬Г®Г°Г®Г§ГЁГІГј
 int ChoosePlayerToFreeze(int currentPlayer) {
     DrowRazrez();
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
-    cout << "   ВЫБЕРИТЕ ИГРОКА ДЛЯ ЗАМОРОЗКИ   \n";
+    cout << "   Г‚Г›ГЃГ…ГђГ€Г’Г… Г€ГѓГђГЋГЉГЂ Г„Г‹Гџ Г‡ГЂГЊГЋГђГЋГ‡ГЉГ€   \n";
     DrowRazrez();
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
-    cout << "Доступные игроки:\n";
+    cout << "Г„Г®Г±ГІГіГЇГ­Г»ГҐ ГЁГЈГ°Г®ГЄГЁ:\n";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
-    // Показывет игроков которых заморозить
+    // ГЏГ®ГЄГ Г§Г»ГўГҐГІ ГЁГЈГ°Г®ГЄГ®Гў ГЄГ®ГІГ®Г°Г»Гµ Г§Г Г¬Г®Г°Г®Г§ГЁГІГј
     for (int i = 0; i < KolichestvoPlayers; i++) {
         if (i != currentPlayer) {
             cout << "  ";
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-            cout << "Игрок " << (i + 1);
+            cout << "Г€ГЈГ°Г®ГЄ " << (i + 1);
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-            cout << " - клетка ";
+            cout << " - ГЄГ«ГҐГІГЄГ  ";
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
             cout << playerPositions[i];
 
             if (skipTurns[i] > 0) {
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-                cout << " (пропуск: " << skipTurns[i] << ")";
+                cout << " (ГЇГ°Г®ГЇГіГ±ГЄ: " << skipTurns[i] << ")";
             }
             if (frozen[i]) {
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
-                cout << " (заморожен)";
+                cout << " (Г§Г Г¬Г®Г°Г®Г¦ГҐГ­)";
             }
             cout << "\n";
         }
     }
     DrowRazrez();
     int choice;
-    // Выбор игрока с вводом
+    // Г‚Г»ГЎГ®Г° ГЁГЈГ°Г®ГЄГ  Г± ГўГўГ®Г¤Г®Г¬
     while (true) {
 
-        // Ввод с проверкой с учётом количества участинков
+        // Г‚ГўГ®Г¤ Г± ГЇГ°Г®ГўГҐГ°ГЄГ®Г© Г± ГіГ·ВёГІГ®Г¬ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ  ГіГ·Г Г±ГІГЁГ­ГЄГ®Гў
         choice = GetNumberInput(1, KolichestvoPlayers);
 
         if (choice == currentPlayer + 1) {
-            cout << "Нельзя выбрать самого себя!\n";
+            cout << "ГЌГҐГ«ГјГ§Гї ГўГ»ГЎГ°Г ГІГј Г±Г Г¬Г®ГЈГ® Г±ГҐГЎГї!\n";
         }
         else if (choice < 1 || choice > KolichestvoPlayers) {
-            cout << "Такого игрока нет!\n";
+            cout << "Г’Г ГЄГ®ГЈГ® ГЁГЈГ°Г®ГЄГ  Г­ГҐГІ!\n";
         }
         else {
             break;
@@ -144,40 +144,40 @@ int ChoosePlayerToFreeze(int currentPlayer) {
     return choice - 1;
 }
 
-// Выводит инфу над картой
+// Г‚Г»ГўГ®Г¤ГЁГІ ГЁГ­ГґГі Г­Г Г¤ ГЄГ Г°ГІГ®Г©
 void ShowGameState() {
     system("cls");
     DrowRazrez();
-    cout << "         И Г Р А     Х О Д И Л К А          \n";
+    cout << "         Г€ Гѓ Гђ ГЂ     Г• ГЋ Г„ Г€ Г‹ ГЉ ГЂ          \n";
     DrowRazrez();
     cout << "  ";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
-    cout << "Игроков: " << KolichestvoPlayers;
+    cout << "Г€ГЈГ°Г®ГЄГ®Гў: " << KolichestvoPlayers;
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-    cout << "   |   Текущий: " << (currentPlayer + 1) << "\n";
+    cout << "   |   Г’ГҐГЄГіГ№ГЁГ©: " << (currentPlayer + 1) << "\n";
     DrowRazrez();
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
-    cout << "  Позиции игроков:\n";
+    cout << "  ГЏГ®Г§ГЁГ¶ГЁГЁ ГЁГЈГ°Г®ГЄГ®Гў:\n";
     for (int i = 0; i < KolichestvoPlayers; i++) {
         cout << "  ";
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-        cout << "Игрок " << (i + 1) <<":";
+        cout << "Г€ГЈГ°Г®ГЄ " << (i + 1) <<":";
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
-        cout << "клетка " << playerPositions[i];
+        cout << "ГЄГ«ГҐГІГЄГ  " << playerPositions[i];
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
         if (skipTurns[i] > 0) {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-            cout << " [пропуск: " << skipTurns[i] << "]";
+            cout << " [ГЇГ°Г®ГЇГіГ±ГЄ: " << skipTurns[i] << "]";
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
         }
         if (frozen[i]) {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
-            cout << " [заморожен]";
+            cout << " [Г§Г Г¬Г®Г°Г®Г¦ГҐГ­]";
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
         }
         if (i == currentPlayer) {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-            cout << " <-- ХОДИТ";
+            cout << " <-- Г•ГЋГ„Г€Г’";
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
         }
         cout << "\n";
@@ -185,27 +185,27 @@ void ShowGameState() {
     DrowRazrez();
 }
 
-// Выводит карту в консоли
+// Г‚Г»ГўГ®Г¤ГЁГІ ГЄГ Г°ГІГі Гў ГЄГ®Г­Г±Г®Г«ГЁ
 void ShowMapWithPlayers() {
     const int N = 50;
-    vector<int> playersOnCell[N]; // Для каждой клетки - список игроков на ней
+    vector<int> playersOnCell[N]; // Г„Г«Гї ГЄГ Г¦Г¤Г®Г© ГЄГ«ГҐГІГЄГЁ - Г±ГЇГЁГ±Г®ГЄ ГЁГЈГ°Г®ГЄГ®Гў Г­Г  Г­ГҐГ©
 
     for (int i = 0; i < N; i++) {
         playersOnCell[i] = GetPlayersOnCell(i); 
     }
-    //получли вектор, где кто нахоидтся
+    //ГЇГ®Г«ГіГ·Г«ГЁ ГўГҐГЄГІГ®Г°, ГЈГ¤ГҐ ГЄГІГ® Г­Г ГµГ®ГЁГ¤ГІГ±Гї
 
-    for (int i = 0; i < 5; i++) { // ряды карты
+    for (int i = 0; i < 5; i++) { // Г°ГїГ¤Г» ГЄГ Г°ГІГ»
         cout << "  ";
         if (i % 2 == 0) {
             for (int j = 0; j < 10; j++) {
-                int NumberKletka = i * 10 + j; // Номер клетки
-                char bukva = gameMap[NumberKletka];                 // Буква клетки (S, F, B, J, P, .)
-                vector<int> players = playersOnCell[NumberKletka]; // Игроки на этой клетке
+                int NumberKletka = i * 10 + j; // ГЌГ®Г¬ГҐГ° ГЄГ«ГҐГІГЄГЁ
+                char bukva = gameMap[NumberKletka];                 // ГЃГіГЄГўГ  ГЄГ«ГҐГІГЄГЁ (S, F, B, J, P, .)
+                vector<int> players = playersOnCell[NumberKletka]; // Г€ГЈГ°Г®ГЄГЁ Г­Г  ГЅГІГ®Г© ГЄГ«ГҐГІГЄГҐ
                  cout << "[";
-                if (!players.empty()) { // Если вектор players НЕ пустой, т.е. стоит на этой клетке
+                if (!players.empty()) { // Г…Г±Г«ГЁ ГўГҐГЄГІГ®Г° players ГЌГ… ГЇГіГ±ГІГ®Г©, ГІ.ГҐ. Г±ГІГ®ГЁГІ Г­Г  ГЅГІГ®Г© ГЄГ«ГҐГІГЄГҐ
                     sort(players.begin(), players.end()); 
-                    ColorBukva(bukva); // Перекрашивает буквы для карты и выводит их
+                    ColorBukva(bukva); // ГЏГҐГ°ГҐГЄГ°Г ГёГЁГўГ ГҐГІ ГЎГіГЄГўГ» Г¤Г«Гї ГЄГ Г°ГІГ» ГЁ ГўГ»ГўГ®Г¤ГЁГІ ГЁГµ
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
                     for (int playerNum : players) { // range-based for loop
                         cout << playerNum;
@@ -213,7 +213,7 @@ void ShowMapWithPlayers() {
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
                 }
                 else {
-                    ColorBukva(bukva); // Перекрашивает буквы для карты и выводит их
+                    ColorBukva(bukva); // ГЏГҐГ°ГҐГЄГ°Г ГёГЁГўГ ГҐГІ ГЎГіГЄГўГ» Г¤Г«Гї ГЄГ Г°ГІГ» ГЁ ГўГ»ГўГ®Г¤ГЁГІ ГЁГµ
                 }
                 cout << "]";
                 if (j != 9 ) {
@@ -229,7 +229,7 @@ void ShowMapWithPlayers() {
                 cout << "[";
                 if (!players.empty()) {
                     sort(players.begin(), players.end());
-                    ColorBukva(bukva); // Перекрашивает буквы для карты и выводит их
+                    ColorBukva(bukva); // ГЏГҐГ°ГҐГЄГ°Г ГёГЁГўГ ГҐГІ ГЎГіГЄГўГ» Г¤Г«Гї ГЄГ Г°ГІГ» ГЁ ГўГ»ГўГ®Г¤ГЁГІ ГЁГµ
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
                     for (int playerNum : players) {
                         cout << playerNum;
@@ -237,7 +237,7 @@ void ShowMapWithPlayers() {
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
                 }
                 else {
-                    ColorBukva(bukva); // Перекрашивает буквы для карты и выводит их
+                    ColorBukva(bukva); // ГЏГҐГ°ГҐГЄГ°Г ГёГЁГўГ ГҐГІ ГЎГіГЄГўГ» Г¤Г«Гї ГЄГ Г°ГІГ» ГЁ ГўГ»ГўГ®Г¤ГЁГІ ГЁГµ
                 }
                 cout << "]";
                 if (j != 0) {
@@ -249,20 +249,20 @@ void ShowMapWithPlayers() {
     }
     DrowRazrez();
     cout << "  ";
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9); cout << "S"; SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7); cout << "-старт  ";
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10); cout << "F"; SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7); cout << "-финиш  ";
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11); cout << "B"; SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7); cout << "-бонус  ";
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12); cout << "J"; SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7); cout << "-ловушка  ";
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13); cout << "P"; SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7); cout << "-портал\n";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9); cout << "S"; SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7); cout << "-Г±ГІГ Г°ГІ  ";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10); cout << "F"; SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7); cout << "-ГґГЁГ­ГЁГё  ";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11); cout << "B"; SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7); cout << "-ГЎГ®Г­ГіГ±  ";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12); cout << "J"; SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7); cout << "-Г«Г®ГўГіГёГЄГ   ";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13); cout << "P"; SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7); cout << "-ГЇГ®Г°ГІГ Г«\n";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
-// Бросок кубика
+// ГЃГ°Г®Г±Г®ГЄ ГЄГіГЎГЁГЄГ 
 int BrosokCube() {
     return rand() % 6 + 1;
 }
 
-// Ход с какой клетки на следующий (и переменные меняет и выводит ход)
+// Г•Г®Г¤ Г± ГЄГ ГЄГ®Г© ГЄГ«ГҐГІГЄГЁ Г­Г  Г±Г«ГҐГ¤ГіГѕГ№ГЁГ© (ГЁ ГЇГҐГ°ГҐГ¬ГҐГ­Г­Г»ГҐ Г¬ГҐГ­ГїГҐГІ ГЁ ГўГ»ГўГ®Г¤ГЁГІ ГµГ®Г¤)
 void MovePlayer(int currentPlayer, int chislo) {
     int pamyt = playerPositions[currentPlayer];
     playerPositions[currentPlayer] += chislo;
@@ -273,16 +273,16 @@ void MovePlayer(int currentPlayer, int chislo) {
 
     cout << "  ";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-    cout << "Игрок " << (currentPlayer + 1);
+    cout << "Г€ГЈГ°Г®ГЄ " << (currentPlayer + 1);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-    cout << " двигается: " << pamyt << " -> ";
+    cout << " Г¤ГўГЁГЈГ ГҐГІГ±Гї: " << pamyt << " -> ";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
     cout << playerPositions[currentPlayer];
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
     cout << "\n";
 }
 
-// Проверка на финиш
+// ГЏГ°Г®ГўГҐГ°ГЄГ  Г­Г  ГґГЁГ­ГЁГё
 bool CheckWin(int currentPlayer) {
     if (playerPositions[currentPlayer] >= 49) {
         winnerPlayer = currentPlayer + 1;
@@ -292,63 +292,63 @@ bool CheckWin(int currentPlayer) {
     return false;
 }
 
-// Вывод вопроса и ввод через проверку GetNumberInput
+// Г‚Г»ГўГ®Г¤ ГўГ®ГЇГ°Г®Г±Г  ГЁ ГўГўГ®Г¤ Г·ГҐГ°ГҐГ§ ГЇГ°Г®ГўГҐГ°ГЄГі GetNumberInput
 bool AskBonusQuestion() {
     const char* questions[] = {
-        "Чему равно число Пи с точностью до двух знаков после запятой?\n1) 3.14  2) 3.16  3) 3.18",
-        "Сколько хромосом у человека?\n1) 44  2) 46  3) 48",
-        "Кто написал 'Мастер и Маргарита'?\n1) Булгаков  2) Достоевский  3) Толстой",
-        "Сколько будет 7! (факториал)?\n1) 5040  2) 720  3) 40320",
-        "Какой химический элемент имеет символ 'Fe'?\n1) Фтор  2) Железо  3) Фермий",
-        "Какой язык является родным для компьютера?\n1) Java  2) Машинный код  3) Python",
-        "Год основания Москвы?\n1) 1147  2) 1247  3) 1347",
-        "Сколько планет в Солнечной системе?\n1) 8  2) 9  3) 10",
-        "Кто открыл закон всемирного тяготения?\n1) Ньютон  2) Эйнштейн  3) Галилей",
-        "Сколько бит в одном байте?\n1) 8  2) 16  3) 32"
+        "Г—ГҐГ¬Гі Г°Г ГўГ­Г® Г·ГЁГ±Г«Г® ГЏГЁ Г± ГІГ®Г·Г­Г®Г±ГІГјГѕ Г¤Г® Г¤ГўГіГµ Г§Г­Г ГЄГ®Гў ГЇГ®Г±Г«ГҐ Г§Г ГЇГїГІГ®Г©?\n1) 3.14  2) 3.16  3) 3.18",
+        "Г‘ГЄГ®Г«ГјГЄГ® ГµГ°Г®Г¬Г®Г±Г®Г¬ Гі Г·ГҐГ«Г®ГўГҐГЄГ ?\n1) 44  2) 46  3) 48",
+        "ГЉГІГ® Г­Г ГЇГЁГ±Г Г« 'ГЊГ Г±ГІГҐГ° ГЁ ГЊГ Г°ГЈГ Г°ГЁГІГ '?\n1) ГЃГіГ«ГЈГ ГЄГ®Гў  2) Г„Г®Г±ГІГ®ГҐГўГ±ГЄГЁГ©  3) Г’Г®Г«Г±ГІГ®Г©",
+        "Г‘ГЄГ®Г«ГјГЄГ® ГЎГіГ¤ГҐГІ 7! (ГґГ ГЄГІГ®Г°ГЁГ Г«)?\n1) 5040  2) 720  3) 40320",
+        "ГЉГ ГЄГ®Г© ГµГЁГ¬ГЁГ·ГҐГ±ГЄГЁГ© ГЅГ«ГҐГ¬ГҐГ­ГІ ГЁГ¬ГҐГҐГІ Г±ГЁГ¬ГўГ®Г« 'Fe'?\n1) Г”ГІГ®Г°  2) Г†ГҐГ«ГҐГ§Г®  3) Г”ГҐГ°Г¬ГЁГ©",
+        "ГЉГ ГЄГ®Г© ГїГ§Г»ГЄ ГїГўГ«ГїГҐГІГ±Гї Г°Г®Г¤Г­Г»Г¬ Г¤Г«Гї ГЄГ®Г¬ГЇГјГѕГІГҐГ°Г ?\n1) Java  2) ГЊГ ГёГЁГ­Г­Г»Г© ГЄГ®Г¤  3) Python",
+        "ГѓГ®Г¤ Г®Г±Г­Г®ГўГ Г­ГЁГї ГЊГ®Г±ГЄГўГ»?\n1) 1147  2) 1247  3) 1347",
+        "Г‘ГЄГ®Г«ГјГЄГ® ГЇГ«Г Г­ГҐГІ Гў Г‘Г®Г«Г­ГҐГ·Г­Г®Г© Г±ГЁГ±ГІГҐГ¬ГҐ?\n1) 8  2) 9  3) 10",
+        "ГЉГІГ® Г®ГІГЄГ°Г»Г« Г§Г ГЄГ®Г­ ГўГ±ГҐГ¬ГЁГ°Г­Г®ГЈГ® ГІГїГЈГ®ГІГҐГ­ГЁГї?\n1) ГЌГјГѕГІГ®Г­  2) ГќГ©Г­ГёГІГҐГ©Г­  3) ГѓГ Г«ГЁГ«ГҐГ©",
+        "Г‘ГЄГ®Г«ГјГЄГ® ГЎГЁГІ Гў Г®Г¤Г­Г®Г¬ ГЎГ Г©ГІГҐ?\n1) 8  2) 16  3) 32"
     };
     
     const int answers[] = { 1, 2, 1, 1, 2, 2, 1, 1, 1, 1 };
     const char* feedback[] = {
-        "Пи ? 3.14", "46 хромосом", "Булгаков", "7! = 5040", "Fe - Железо",
-        "Машинный код", "1147 год", "8 планет", "Ньютон", "8 бит = 1 байт"
+        "ГЏГЁ ? 3.14", "46 ГµГ°Г®Г¬Г®Г±Г®Г¬", "ГЃГіГ«ГЈГ ГЄГ®Гў", "7! = 5040", "Fe - Г†ГҐГ«ГҐГ§Г®",
+        "ГЊГ ГёГЁГ­Г­Г»Г© ГЄГ®Г¤", "1147 ГЈГ®Г¤", "8 ГЇГ«Г Г­ГҐГІ", "ГЌГјГѕГІГ®Г­", "8 ГЎГЁГІ = 1 ГЎГ Г©ГІ"
     };
 
     int qIndex = rand() % 10;
 
-    // Вывод вопроса
+    // Г‚Г»ГўГ®Г¤ ГўГ®ГЇГ°Г®Г±Г 
     cout << "\n";
     DrowRazrez();
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
-    cout << "               БОНУСНЫЙ ВОПРОС        \n";
+    cout << "               ГЃГЋГЌГ“Г‘ГЌГ›Г‰ Г‚ГЋГЏГђГЋГ‘        \n";
     DrowRazrez();
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
 
     cout << questions[qIndex] << ": ";
     int userAnswer = GetNumberInput(1, 3);        
     DrowRazrez();
-    // Проверка ответа
+    // ГЏГ°Г®ГўГҐГ°ГЄГ  Г®ГІГўГҐГІГ 
     bool isCorrect = (userAnswer == answers[qIndex]);
     
     if (isCorrect) {
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-        cout << "Верно! " << feedback[qIndex] << "\n";
+        cout << "Г‚ГҐГ°Г­Г®! " << feedback[qIndex] << "\n";
     }
     else {
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-        cout << "Неверно. Правильный ответ: " << feedback[qIndex] << "\n";
+        cout << "ГЌГҐГўГҐГ°Г­Г®. ГЏГ°Г ГўГЁГ«ГјГ­Г»Г© Г®ГІГўГҐГІ: " << feedback[qIndex] << "\n";
     }
 
     return isCorrect;
 }
 
-// Взоимодействие с клеткой (Тп, Пропуск, Фриз)
+// Г‚Г§Г®ГЁГ¬Г®Г¤ГҐГ©Г±ГІГўГЁГҐ Г± ГЄГ«ГҐГІГЄГ®Г© (Г’ГЇ, ГЏГ°Г®ГЇГіГ±ГЄ, Г”Г°ГЁГ§)
 void ProcessCell(int currentPlayer) {
 
     int pos = playerPositions[currentPlayer];
     char bukva = gameMap[pos];
     DrowRazrez();
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
-    cout << "         ЭФФЕКТ КЛЕТКИ " << pos << "\n";
+    cout << "         ГќГ”Г”Г…ГЉГ’ ГЉГ‹Г…Г’ГЉГ€ " << pos << "\n";
     DrowRazrez();
 
     int Color = 7;
@@ -362,70 +362,70 @@ void ProcessCell(int currentPlayer) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), Color);
 
     if (bukva == '.') {
-        cout << "  Обычная клетка. Ничего не происходит.\n";
+        cout << "  ГЋГЎГ»Г·Г­Г Гї ГЄГ«ГҐГІГЄГ . ГЌГЁГ·ГҐГЈГ® Г­ГҐ ГЇГ°Г®ГЁГ±ГµГ®Г¤ГЁГІ.\n";
     }
     else if (bukva == 'J') {
-        cout << "  ЛОВУШКА! Пропуск 1 хода.\n";
+        cout << "  Г‹ГЋГ‚Г“ГГЉГЂ! ГЏГ°Г®ГЇГіГ±ГЄ 1 ГµГ®Г¤Г .\n";
         skipTurns[currentPlayer]++;
     }
     else if (bukva == 'B') {
-        cout << "  БОНУС! Ответьте на вопрос.\n";
+        cout << "  ГЃГЋГЌГ“Г‘! ГЋГІГўГҐГІГјГІГҐ Г­Г  ГўГ®ГЇГ°Г®Г±.\n";
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
         if (AskBonusQuestion()) {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-            cout << "\n  ПРАВИЛЬНО! Вы получаете награду!\n";
+            cout << "\n  ГЏГђГЂГ‚Г€Г‹ГњГЌГЋ! Г‚Г» ГЇГ®Г«ГіГ·Г ГҐГІГҐ Г­Г ГЈГ°Г Г¤Гі!\n";
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
             if (rand() % 2 == 0) {
-                cout << "  Награда: +2 шага вперед!\n";
+                cout << "  ГЌГ ГЈГ°Г Г¤Г : +2 ГёГ ГЈГ  ГўГЇГҐГ°ГҐГ¤!\n";
                 MovePlayer(currentPlayer, 2);
             }
             else {
-                cout << "  Награда: Заморозка другого игрока!\n";
+                cout << "  ГЌГ ГЈГ°Г Г¤Г : Г‡Г Г¬Г®Г°Г®Г§ГЄГ  Г¤Г°ГіГЈГ®ГЈГ® ГЁГЈГ°Г®ГЄГ !\n";
                 int playerToFreeze = ChoosePlayerToFreeze(currentPlayer);                              
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
-                cout << "  Игрок " << (playerToFreeze + 1) << " заморожен на 1 ход!\n";
+                cout << "  Г€ГЈГ°Г®ГЄ " << (playerToFreeze + 1) << " Г§Г Г¬Г®Г°Г®Г¦ГҐГ­ Г­Г  1 ГµГ®Г¤!\n";
                 frozen[playerToFreeze] = true;
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);                
             }
         }
         else {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-            cout << "\n  НЕПРАВИЛЬНО! Вы лишаетесь бонуса.\n";
+            cout << "\n  ГЌГ…ГЏГђГЂГ‚Г€Г‹ГњГЌГЋ! Г‚Г» Г«ГЁГёГ ГҐГІГҐГ±Гј ГЎГ®Г­ГіГ±Г .\n";
         }
     }
     else if (bukva == 'P') {
-        cout << "  ТЕЛЕПОРТ! Мгновенное перемещение.\n";
+        cout << "  Г’Г…Г‹Г…ГЏГЋГђГ’! ГЊГЈГ­Г®ГўГҐГ­Г­Г®ГҐ ГЇГҐГ°ГҐГ¬ГҐГ№ГҐГ­ГЁГҐ.\n";
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
         int MovePortal = FindTeleportDestination(pos);
         int oldPos = playerPositions[currentPlayer];
 
         
-        cout << "  Перемещение: " << oldPos << " -> " << MovePortal << "\n";
+        cout << "  ГЏГҐГ°ГҐГ¬ГҐГ№ГҐГ­ГЁГҐ: " << oldPos << " -> " << MovePortal << "\n";
         playerPositions[currentPlayer] = MovePortal;
 
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
-        cout << "  Телепорты связаны: " << oldPos << " ? " << MovePortal << "\n";
+        cout << "  Г’ГҐГ«ГҐГЇГ®Г°ГІГ» Г±ГўГїГ§Г Г­Г»: " << oldPos << " ? " << MovePortal << "\n";
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
         char newBukva = gameMap[MovePortal];        
     }
     else if (bukva == 'F') {
-        cout << "  ФИНИШ! Вы достигли конечной клетки!\n";
+        cout << "  Г”Г€ГЌГ€Г! Г‚Г» Г¤Г®Г±ГІГЁГЈГ«ГЁ ГЄГ®Г­ГҐГ·Г­Г®Г© ГЄГ«ГҐГІГЄГЁ!\n";
     }
     DrowRazrez();
 }
 
-//Процесс хода
+//ГЏГ°Г®Г¶ГҐГ±Г± ГµГ®Г¤Г 
 void ProcessTurn() {
     if (skipTurns[currentPlayer] > 0) {
         cout << "\n";
         DrowRazrez();
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-        cout << "  Игрок " << (currentPlayer + 1) << " пропускает ход!\n";
-        cout << "  Осталось пропусков: " << skipTurns[currentPlayer] << "\n";
+        cout << "  Г€ГЈГ°Г®ГЄ " << (currentPlayer + 1) << " ГЇГ°Г®ГЇГіГ±ГЄГ ГҐГІ ГµГ®Г¤!\n";
+        cout << "  ГЋГ±ГІГ Г«Г®Г±Гј ГЇГ°Г®ГЇГіГ±ГЄГ®Гў: " << skipTurns[currentPlayer] << "\n";
         DrowRazrez();
         skipTurns[currentPlayer]--;
         return;
@@ -435,8 +435,8 @@ void ProcessTurn() {
         cout << "\n";
         DrowRazrez();
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
-        cout << "  Игрок " << (currentPlayer + 1) << " заморожен!\n";
-        cout << "  Пропуск этого хода.\n";
+        cout << "  Г€ГЈГ°Г®ГЄ " << (currentPlayer + 1) << " Г§Г Г¬Г®Г°Г®Г¦ГҐГ­!\n";
+        cout << "  ГЏГ°Г®ГЇГіГ±ГЄ ГЅГІГ®ГЈГ® ГµГ®Г¤Г .\n";
         DrowRazrez();
         frozen[currentPlayer] = false;
         return;
@@ -444,18 +444,18 @@ void ProcessTurn() {
     cout << "\n";
     DrowRazrez();
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-    cout << "               БРОСОК КУБИКА\n";
+    cout << "               ГЃГђГЋГ‘ГЋГЉ ГЉГ“ГЃГ€ГЉГЂ\n";
     DrowRazrez();
 
-    cout << "  Игрок ";
+    cout << "  Г€ГЈГ°Г®ГЄ ";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
     cout << (currentPlayer + 1);
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-    cout << ", нажмите любую клавишу...";
+    cout << ", Г­Г Г¦Г¬ГЁГІГҐ Г«ГѕГЎГіГѕ ГЄГ«Г ГўГЁГёГі...";
     _getch();
 
     int chislo = BrosokCube();
-    cout << "\n  Выпало: ";
+    cout << "\n  Г‚Г»ГЇГ Г«Г®: ";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
     cout << "[" << chislo << "]\n";
     DrowRazrez();
@@ -466,18 +466,16 @@ void ProcessTurn() {
         cout << "\n";
         DrowRazrez();
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 14);
-        cout << "  ПОБЕДИТЕЛЬ: ИГРОК " << (currentPlayer + 1) << "!\n";
+        cout << "  ГЏГЋГЃГ…Г„Г€Г’Г…Г‹Гњ: Г€ГѓГђГЋГЉ " << (currentPlayer + 1) << "!\n";
         DrowRazrez();
         return;
     }
 
-    // Обрабатываем клетку только если игрок еще не выиграл
-    if (!gameOver) {
-        ProcessCell(currentPlayer);
-    }
+    // ГЋГЎГ°Г ГЎГ ГІГ»ГўГ ГҐГ¬ ГЄГ«ГҐГІГЄГі ГІГ®Г«ГјГЄГ® ГҐГ±Г«ГЁ ГЁГЈГ°Г®ГЄ ГҐГ№ГҐ Г­ГҐ ГўГ»ГЁГЈГ°Г Г«
+    ProcessCell(currentPlayer);    
 }
 
-// Все вызовы игры
+// Г‚Г±ГҐ ГўГ»Г§Г®ГўГ» ГЁГЈГ°Г»
 void StartGame() {
 
     InitGame();
@@ -490,21 +488,21 @@ void StartGame() {
 
         DrowRazrez();
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-        cout << "                Х О Д   № " << NumberXoda << "           \n";
+        cout << "                Г• ГЋ Г„   В№ " << NumberXoda << "           \n";
         DrowRazrez();
 
         ProcessTurn();
 
         if (gameOver) {
-            // Пауза перед показом финальной карты
-            cout << "\nНажмите любую клавишу для просмотра финальной карты...";
+            // ГЏГ ГіГ§Г  ГЇГҐГ°ГҐГ¤ ГЇГ®ГЄГ Г§Г®Г¬ ГґГЁГ­Г Г«ГјГ­Г®Г© ГЄГ Г°ГІГ»
+            cout << "\nГЌГ Г¦Г¬ГЁГІГҐ Г«ГѕГЎГіГѕ ГЄГ«Г ГўГЁГёГі Г¤Г«Гї ГЇГ°Г®Г±Г¬Г®ГІГ°Г  ГґГЁГ­Г Г«ГјГ­Г®Г© ГЄГ Г°ГІГ»...";
             _getch();
 
-            // Показываем финальную карту перед завершением
+            // ГЏГ®ГЄГ Г§Г»ГўГ ГҐГ¬ ГґГЁГ­Г Г«ГјГ­ГіГѕ ГЄГ Г°ГІГі ГЇГҐГ°ГҐГ¤ Г§Г ГўГҐГ°ГёГҐГ­ГЁГҐГ¬
             system("cls");
 
             DrowRazrez();
-            cout << "       Ф И Н А Л Ь Н А Я   К А Р Т А       \n";
+            cout << "       Г” Г€ ГЌ ГЂ Г‹ Гњ ГЌ ГЂ Гџ   ГЉ ГЂ Гђ Г’ ГЂ       \n";
             DrowRazrez();
 
             ShowMapWithPlayers();
@@ -512,16 +510,17 @@ void StartGame() {
             break;
         }
 
-        // Передают ходж следующему игроку
+        // ГЏГҐГ°ГҐГ¤Г ГѕГІ ГµГ®Г¤Г¦ Г±Г«ГҐГ¤ГіГѕГ№ГҐГ¬Гі ГЁГЈГ°Г®ГЄГі
         currentPlayer = (currentPlayer + 1) % KolichestvoPlayers;
         NumberXoda++;
 
-        cout << "\nНажмите любую клавишу для продолжения...";
+        cout << "\nГЌГ Г¦Г¬ГЁГІГҐ Г«ГѕГЎГіГѕ ГЄГ«Г ГўГЁГёГі Г¤Г«Гї ГЇГ°Г®Г¤Г®Г«Г¦ГҐГ­ГЁГї...";
         _getch();
     }
 }
 
-// Показывает победителя
+// ГЏГ®ГЄГ Г§Г»ГўГ ГҐГІ ГЇГ®ГЎГҐГ¤ГЁГІГҐГ«Гї
 int GetWinner() {
     return winnerPlayer;
+
 }
