@@ -408,9 +408,7 @@ void ProcessCell(int currentPlayer) {
 
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 13);
         cout << "  Òåëåïîðòû ñâÿçàíû: " << oldPos << " ? " << MovePortal << "\n";
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-
-        char newBukva = gameMap[MovePortal];        
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);        
     }
     else if (bukva == 'F') {
         cout << "  ÔÈÍÈØ! Âû äîñòèãëè êîíå÷íîé êëåòêè!\n";
@@ -524,3 +522,4 @@ int GetWinner() {
     return winnerPlayer;
 
 }
+
