@@ -55,6 +55,8 @@ int main()
     int winner = GetWinner();
     // Выводит победителя
     EndGame(winner);
+    _getch();
 
     return 0;
+
 }
