@@ -1,0 +1,51 @@
+#include <iostream>
+#include "ProverkaInput.h"
+#include <cstdlib>
+
+using namespace std;
+
+// Проверка ввода количетсва участников
+int CheckKolichestvoPlayers(int KolichestvoPlayers) {
+    bool ok = false;
+
+    while (!ok && (2 > KolichestvoPlayers || KolichestvoPlayers > 5)) {
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+        else if (2 > KolichestvoPlayers || KolichestvoPlayers > 5) {
+            cout << "Количество игроков не находится в диапозоне от 2 до 5 включительно.\n";
+            cout << "Пожалуйства повторите ввод. ";
+            cout << "Сколько игроков будет участвать в игре?\n";
+            cout << "Количество: ";
+            cin >> KolichestvoPlayers;
+            system("cls");
+        }
+        else {
+            ok = true;
+        }
+    }
+	return KolichestvoPlayers;
+}
+
+// Проверка ввода для Вопроса и для Выбора игрока
+int GetNumberInput(int MinNumber, int MaxNumber) {
+    int input;
+    while (true) {
+        cout << "Введите число от " << MinNumber << " до " << MaxNumber << ": ";
+        cin >> input;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Ошибка! Введите число.\n";
+        }
+        else if (input < MinNumber || input > MaxNumber) {
+            cout << "Число должно быть от " << MinNumber << " до " << MaxNumber << "!\n";
+        }
+        else {
+            cin.ignore(1000, '\n');
+            return input;
+        }
+    }
+}
