@@ -87,7 +87,7 @@ void EndGame(int winner) {
     cout << "               И Г Р О К  " << winner << " !\n\n";
     cout << "               /\\_____/\\\n";
     cout << "              /  o   o  \\\n";
-    cout << "             ( ==  V  ==  )\n";
+    cout << "             ( ==  V  == )\n";
     cout << "              )         (\n";
     cout << "             (           )\n";
     cout << "            ( (  )   (  ) )\n";
@@ -96,4 +96,5 @@ void EndGame(int winner) {
     cout << "\n";
     cout << "  Игрок " << winner << " первым достиг финишной клетки!\n";
     cout << "  Спасибо за игру! До новых встреч!\n\n\n";
+
 }
